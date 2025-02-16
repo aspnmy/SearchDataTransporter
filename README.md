@@ -1,0 +1,2 @@
+# SearchDataTransporter
+一个中间层服务,主要为了支持让本地部署的Ollama框架中运行的大模型实现联网搜索能力
