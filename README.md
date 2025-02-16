@@ -9,6 +9,10 @@
 - ⚡ 高性能处理（支持100+ QPS）
 - 🔒 生产级可靠性保障
 
+## 如何使本地大模型实现联网搜索
+
+[Cherry Studio + Ollama 本地部署 + SearchDataTransporte搜索中间件服务实现联网搜索](/docx/CherryStudio_Ollama本地部署_SearchDataTransporte搜索中间件服务实现联网搜索.md)
+
 ## 功能特性
 
 - RESTful API接口
