@@ -1,4 +1,5 @@
 # SearchDataTransporter 搜索中间件服务
+
 一个中间层服务,主要为了支持让本地部署的Ollama框架中运行的大模型实现联网搜索能力
 
 基于Go实现的搜索数据中转服务，提供以下核心功能：
@@ -26,15 +27,17 @@
 - 提交建议：https://t.me/Ollama_Scanner
 
 ### 前置依赖
+
 - Go 1.20+
 - Kafka集群（默认本地9092端口）
 - 网络可访问百度搜索（测试用）
 
 ### 本地运行
+
 ```bash
 # 克隆仓库
 git clone https://github.com/aspnmy/SearchDataTransporter.git
-cd search-service
+cd SearchDataTransporter
 
 # 安装依赖
 go mod download
@@ -44,6 +47,7 @@ KAFKA_BROKERS="localhost:9092" go run main.go
 ```
 
 ### 测试请求
+
 ```bash
 # 正常搜索请求
 curl "http://localhost:8080/search?q=golang"
@@ -59,47 +63,51 @@ wrk -t12 -c400 -d30s "http://localhost:8080/search?q=test"
 
 通过环境变量配置服务参数：
 
-| 环境变量           | 默认值           | 说明                     |
-|--------------------|------------------|--------------------------|
-| KAFKA_BROKERS      | localhost:9092   | Kafka集群地址            |
-| HTTP_PORT          | 8080             | 服务监听端口             |
-| MAX_RESPONSE_SIZE  | 10485760 (10MB)  | 最大响应体限制           |
-| RATE_LIMIT         | 100              | 每秒最大请求数           |
-| BURST_LIMIT        | 200              | 突发请求允许数量         |
+
+| 环境变量          | 默认值          | 说明             |
+| ----------------- | --------------- | ---------------- |
+| KAFKA_BROKERS     | localhost:9092  | Kafka集群地址    |
+| HTTP_PORT         | 8080            | 服务监听端口     |
+| MAX_RESPONSE_SIZE | 10485760 (10MB) | 最大响应体限制   |
+| RATE_LIMIT        | 100             | 每秒最大请求数   |
+| BURST_LIMIT       | 200             | 突发请求允许数量 |
 
 示例配置：
+
 ```bash
 export KAFKA_BROKERS="kafka1:9092,kafka2:9092"
 export HTTP_PORT=3000
 export RATE_LIMIT=200
-./search-service
+./SearchDataServer
 ```
 
 ## 生产部署
 
 ### Docker部署
+
 ```bash
-docker build -t search-service .
+docker build -t search_data_transporter .
 docker run -d \
   -p 8080:8080 \
   -e KAFKA_BROKERS="kafka-prod:9092" \
   -e RATE_LIMIT=500 \
-  search-service
+  aspnmy/search_data_transporter
 ```
 
 ### Kubernetes示例配置
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-service
+  name: SearchDataTransporter
 spec:
   replicas: 3
   template:
     spec:
       containers:
       - name: search
-        image: search-service:latest
+        image: aspnmy/search_data_transporter
         env:
         - name: KAFKA_BROKERS
           value: "kafka-cluster:9092"
@@ -114,6 +122,7 @@ spec:
 ## API文档
 
 ### 搜索接口
+
 ```
 GET /search?q={query}
 
@@ -131,6 +140,7 @@ GET /search?q={query}
 ```
 
 ### 健康检查
+
 ```
 GET /health
 
@@ -149,6 +159,7 @@ GET /health
 ## 监控指标
 
 内置Prometheus指标端点（需自行配置采集）：
+
 - http_requests_total：请求计数器
 - http_response_time_seconds：响应时间分布
 - kafka_messages_sent：消息发送统计
@@ -156,11 +167,12 @@ GET /health
 ## 性能优化
 
 1. Kafka生产者配置：
+
    - 消息压缩：Snappy
    - 自动重试（3次）
    - 异步批量发送
-
 2. HTTP服务：
+
    - 连接池复用
    - 超时控制
    - 内存限制
