@@ -1,0 +1,6 @@
+kafka:
+  brokers: localhost:9092
+  topic: search_results
+http:
+  timeout: 10s
+  endpoint: http://localhost:8080/search
