@@ -1,0 +1,13 @@
+name: ollama_cpu
+services:
+    ollama:
+        volumes:
+            - ollama:/root/.ollama
+        ports:
+            - 11434:11434
+        container_name: ollama_cpu
+        image: alpine/ollama
+volumes:
+    ollama:
+        external: true
+        name: ollama_cpu

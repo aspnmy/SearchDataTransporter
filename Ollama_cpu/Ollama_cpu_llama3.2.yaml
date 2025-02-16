@@ -1,0 +1,13 @@
+name: ollama_cpu_llama3-2
+services:
+    ollama:
+        volumes:
+            - ollama:/root/.ollama
+        ports:
+            - 11434:11434
+        container_name: ollama_cpu_llama3-2
+        image: alpine/ollama:llama3.2
+volumes:
+    ollama:
+        external: true
+        name: ollama_cpu_llama3-2
